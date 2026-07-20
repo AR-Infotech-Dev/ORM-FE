@@ -75,6 +75,7 @@ function DynamicModuleForm({ sections = [], values = {}, onChange, onObjectSelec
           config={field.config}
           error={errors[field.name]}
         />
+        
         break;
       case "smartSelectInput":
         return <SmartSelectInput
