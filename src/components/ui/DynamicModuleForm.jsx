@@ -43,6 +43,14 @@ function DynamicModuleForm({ sections = [], values = {}, onChange, onObjectSelec
   };
 
   const renderField = (field) => {
+    // {
+    //   name: "dealer_id",
+    //     label: "Dealer",
+    //       type: "text",
+    //         required: true,
+    //           placeholder: "Select Dealer",
+    //             gridSpan: 6,
+    //       }      
     const value = values[field.name] ?? "";
     const emitValueChange = (nextValue) => {
       onChange?.({
@@ -103,7 +111,7 @@ function DynamicModuleForm({ sections = [], values = {}, onChange, onObjectSelec
   return (
     <div className="space-y-5">
       {sections.map((section, sectionIndex) => {
-        const Icon = section.icon; 
+        const Icon = section.icon;
         const visibleFields = section.fields.filter((field) => {
           const isVisible = field.visibleWhen
             ? field.visibleWhen(values, oldValues, mode)
