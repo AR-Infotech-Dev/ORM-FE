@@ -46,6 +46,7 @@ export function getRowIdentifier(row) {
     row?.customer_id ??
     row?.company_id ??
     row?.dealer_id
+    row?.roleID
   );
 }
 

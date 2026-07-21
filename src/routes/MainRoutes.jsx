@@ -15,9 +15,11 @@ const MenuMasterModulePage = lazy(() => import("@modules/menu-master/MenuMasterM
 const CategoryModulePage = lazy(() => import("@modules/category/CategoryModulePage"));
 const ProductModulePage = lazy(() => import("@modules/products/ProductModulePage"));
 const CompanyMasterModulePage = lazy(() => import("@modules/company-master/CompanyMasterModulePage"));
+
 const AccessControlModulePage = lazy(() => import("@modules/access-control/AccessControlModulePage"));
 const UserProfilePage = lazy(() => import("@modules/profile/UserProfilePage"));
 const DealerModulePage = lazy(() => import("@modules/dealer/DealerModulePage"));
+const UserRoleModulePage = lazy(() => import("@modules/user-role/UserRoleModulePage"));
 
 const withPermission = (menuId, element) => (
   <PermissionRoute menuId={menuId}>{element}</PermissionRoute>
@@ -37,6 +39,7 @@ const menuRouteComponents = {
   "/companies": CompanyMasterModulePage,
   "/companyMaster": CompanyMasterModulePage,
   "/company-master": CompanyMasterModulePage,
+  "/user-role": UserRoleModulePage ,
   "/access-control": AccessControlModulePage,
 };
 
