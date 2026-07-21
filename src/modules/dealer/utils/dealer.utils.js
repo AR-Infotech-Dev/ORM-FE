@@ -24,6 +24,10 @@ export function normalizeDealerSavePayload(formData = {}) {
     gstin: formData.gstin || null,
     credit_limit: formData.credit_limit || null,
     assigned_salesman: formData.assigned_salesman || null,
+    dealer_type: formData.dealer_type || null,
+    pan_number: formData.pan_number || null,
+   
+    
 
     status: formData.status || null,
   };
