@@ -5,6 +5,7 @@ import productsReducer from "@modules/products/data/products.slice";
 import categoriesReducer from "@modules/category/data/categories.slice";
 import companyMasterReducer from "@modules/company-master/data/companyMaster.slice";
 import menuMasterReducer from "@modules/menu-master/data/menuMaster.slice";
+import dealerMasterReducer from "@modules/dealer/data/dealer.slice";
 import userroleReducer from "@modules/user-role/data/userrole.slice";
 
 export const store = configureStore({
@@ -15,6 +16,7 @@ export const store = configureStore({
     categories: categoriesReducer,
     companyMaster: companyMasterReducer,
     menuMaster: menuMasterReducer,
+    dealers: dealerMasterReducer,
     userrole: userroleReducer,
   },
 });
