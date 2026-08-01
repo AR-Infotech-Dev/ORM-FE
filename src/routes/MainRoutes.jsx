@@ -15,8 +15,12 @@ const MenuMasterModulePage = lazy(() => import("@modules/menu-master/MenuMasterM
 const CategoryModulePage = lazy(() => import("@modules/category/CategoryModulePage"));
 const ProductModulePage = lazy(() => import("@modules/products/ProductModulePage"));
 const CompanyMasterModulePage = lazy(() => import("@modules/company-master/CompanyMasterModulePage"));
+
 const AccessControlModulePage = lazy(() => import("@modules/access-control/AccessControlModulePage"));
 const UserProfilePage = lazy(() => import("@modules/profile/UserProfilePage"));
+const DealerModulePage = lazy(() => import("@modules/dealer/DealerModulePage"));
+const UserRoleModulePage = lazy(() => import("@modules/user-role/UserRoleModulePage"));
+const MyTeamsModulePage = lazy(() => import("@modules/myTeams/MyTeamsModulePage"));
 
 const withPermission = (menuId, element) => (
   <PermissionRoute menuId={menuId}>{element}</PermissionRoute>
@@ -26,6 +30,7 @@ const withPermission = (menuId, element) => (
 // The route path and menu_id still come from the API menu list.
 const menuRouteComponents = {
   "/dashboard": Dashboard,
+  "/dealers": DealerModulePage,
   "/users": UsersModulePage,
   "/menus": MenuMasterModulePage,
   "/products": ProductModulePage,
@@ -35,7 +40,9 @@ const menuRouteComponents = {
   "/companies": CompanyMasterModulePage,
   "/companyMaster": CompanyMasterModulePage,
   "/company-master": CompanyMasterModulePage,
+  "/user-role": UserRoleModulePage ,
   "/access-control": AccessControlModulePage,
+  "/myTeams": MyTeamsModulePage,
 };
 
 function DefaultMenuRedirect() {

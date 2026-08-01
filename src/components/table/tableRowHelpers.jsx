@@ -34,6 +34,7 @@ const PILL_BASE_CLASS = {
 
 export function getRowIdentifier(row) {
   return (
+     row?.product_id ??
     row?.visit_id ??
     row?.category_id ??
     row?._id ??
@@ -45,7 +46,9 @@ export function getRowIdentifier(row) {
     row?.userId ??
     row?.menu_id ??
     row?.customer_id ??
-    row?.company_id
+    row?.company_id ??
+    row?.dealer_id ??
+    row?.roleID
   );
 }
 

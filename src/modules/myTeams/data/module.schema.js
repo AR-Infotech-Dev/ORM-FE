@@ -5,31 +5,32 @@ const FIXED_TABLE_COLUMNS = [
   { key: "select", className: "check-col", checkbox: true, width: 42, minWidth: 42, resizable: false },
   // { key: "favorite", className: "icon-col", width: 42, minWidth: 42, resizable: false },
 ];
-export const usersModuleSchema = {
+export const myTeamsModuleSchema = {
   // Copy this object for the next module and update API paths, joined tables,
   // default columns, skip fields, label mappings, and form sections only.
-  title: "Users",
-  description: "Manage users, roles, company assignment, and approval access from one place.",
+  title: "My Team",
+  description: "Manage your sales hierarchy and team performance",
   menu_id: 20,
   primaryKey: 'adminID',
   api: {
-    list: "/users",
-    delete: "/users/delete",
-    create: "/users/create",
-    edit: "/users",
+    list: "/myTeams",
+    delete: "/myTeams/delete",
+    create: "/myTeams/create",
+    edit: "/myTeams",
+    memberDetails: "/myTeams/member-details",
     definitions: "/system/getDefinations",
     definitionsFallback: "/system/getstructure",
   },
   definitionRequest: {
     menuIDField: "menu_id",
     modelNameField: "model_name",
-    modelName: "user",
+    modelName: "My Teams",
   },
   staticJoined: [
     // Keep joined field metadata here so future modules can reuse the same pattern.
     // If you have dropdown APIs later, options can be filled dynamically from here.
     {
-      field: "reporting_to_user_id",
+      field: "reporting_to",
       fieldtype: "joined",
       joinedTable: "admin",
       select: "adminID,name",
@@ -49,7 +50,7 @@ export const usersModuleSchema = {
       options: [],
     },
   ],
-  defaultColumns: ["name", "userName", "email", "contactNo", "roleID", "reporting_to_user_id", "status", "company_id"],
+  defaultColumns: ["name", "userName", "email", "contactNo", "roleID", "reporting_to", "status", "company_id"],
   skipFields: ["user_setting", "gfcmToken", "otp", "country_code", "otp_exp_time", "g_cal_token", "one_drive_access_token", "is_google_sync", "is_one_drive_sync", "ftoken", "isVerified", "photo", "adminID", "latitude", "longitude", "roleOfUser", "password"],
   tableCellConfig: [
     { column_name: "name", type: "person" },
@@ -68,7 +69,7 @@ export const usersModuleSchema = {
     { userName: "User Name" },
     { roleID: "User Role" },
 
-    { reporting_to_user_id: "Reporting To" },
+    { reporting_to: "Reporting To" },
 
     { is_approver: "Approval Privileges" },
     { otp: "OTP" },
@@ -88,9 +89,7 @@ export const usersModuleSchema = {
       password: null,
       is_sys_user: "no",
       roleID: null,
-
-      reporting_to_user_id: null,
-
+      reporting_to: null,
       address: null,
       google_location: null,
       contactNo: null,
@@ -293,10 +292,10 @@ export const usersModuleSchema = {
   })
 };
 
-export const usersFallbackColumns = [
+export const myTeamsFallbackColumns = [
   ...FIXED_TABLE_COLUMNS,
-  ...buildFallbackColumnsFromKeys(usersModuleSchema.defaultColumns, {
-    columnMappings: usersModuleSchema.columnMappings,
-    tableCellConfig: usersModuleSchema.tableCellConfig,
+  ...buildFallbackColumnsFromKeys(myTeamsModuleSchema.defaultColumns, {
+    columnMappings: myTeamsModuleSchema.columnMappings,
+    tableCellConfig: myTeamsModuleSchema.tableCellConfig,
   }),
 ];

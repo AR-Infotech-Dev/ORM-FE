@@ -79,6 +79,8 @@ const SmartSelectInput = ({ id, field = {}, value, onSelect, onObjectSelect, con
     setLoading(true);
     const headers = {};
     let res = {}, data = [], newOptions = [];
+    console.log(type);
+    
     if (type === 'category') {
       let urlType = customURL || `${API_BASE_URL}/searchSlugList`;
       const posData = customURL ? customParameters : { status: 'active', slug: source };
