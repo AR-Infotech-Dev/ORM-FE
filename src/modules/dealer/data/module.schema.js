@@ -27,11 +27,11 @@ export const DealersModuleSchema = {
   tableCellConfig: [
 
   ],
-  defaultColumns: ["name","assigned_salesman"],
+  defaultColumns: ["name", "assigned_salesman"],
   skipFields: ["company_id"],
   columnMappings: [
     { dealer_name: "Name" },
-    {assigned_salesman: "Assigned Salesman"}
+    { assigned_salesman: "Assigned Salesman" }
   ],
   savedFilters: [],
   form: {
@@ -44,52 +44,39 @@ export const DealersModuleSchema = {
       email: null,
       gstin: null,
       credit_limit: null,
-      status: " ",
-      assigned_salesman: null
+      status:"inactive",
+      assigned_salesman: null,
+      dealer_type: null,
+      pan_number: null,
+
     },
     sections: [
       {
         columns: 2,
         fields: [
-          { name: "name", label: "Dealer name", type: "text", placeholder: "Enter Dealer name", gridSpan: 12 },
+          { name: "name", label: "Dealer name", type: "text", placeholder: "Enter Dealer name", gridSpan: 6 },
+          {
+            name: "dealer_type",
+            label: "Dealer Type",
+            type: "select",
+            required: true,
+            options: [
+              { value: "distributor", label: "Distributor" },
+              { value: "dealer", label: "Dealer" },
+              { value: "retailer", label: "Retailer" },
+              { value: "customer", label: "Customer" },
+
+            ]
+          },
         ],
       },
       {
         columns: 2,
         fields: [
           { name: "code", label: "Dealer code", type: "value", required: true, placeholder: "", gridSpan: 6 },
-          { name: "mobile", label: "Mobile no", type: "value", required: true, placeholder: "Enter mobile number", gridSpan: 6 },
-
-        ],
-      },
-      {
-        columns: 2,
-        fields: [
-          { name: "email", label: "Email", type: "text", placeholder: "Enter your Email", gridSpan: 6 },
-          { name: "gstin", label: "GST NO", type: "text", placeholder: "Enter your GST NO", gridSpan: 6 }
-        ]
-      },
-      {
-        columns: 2,
-        fields: [
-          { name: "credit_limit", label: "Credit limit", type: "value", placeholder: "", gridSpan: 6 },
-          {
-            name: "status",
-            label: "Status",
-            type: "radio",
-            options: [
-              { value: "active", label: "Active" },
-              { value: "inactive", label: "Inactive" },
-            ],
-          },
-        ]
-      },
-      {
-        columns: 2,
-        fields: [
           {
             name: "assigned_salesman",
-            label: "Assigned by",
+            label: "Assigned to",
             type: "smartSelect",
             required: true,
             id: "adminID",
@@ -104,9 +91,48 @@ export const DealersModuleSchema = {
               multi: false
             }
           },
-        ]
+        ],
+      },
+      {
+        columns: 2,
+        fields: [
+          { name: "mobile", label: "Mobile no", type: "value", required: true, placeholder: "Enter mobile number", gridSpan: 6 },
+          { name: "email", label: "Email", type: "text", placeholder: "Enter your Email", gridSpan: 6 },
+          // { name: "gstin", label: "GST NO", type: "text", placeholder: "Enter your GST NO", gridSpan: 6 }
 
-      }
+        ]
+      },
+      {
+        columns: 2,
+        fields: [
+          { name: "credit_limit", label: "Credit limit", type: "value", placeholder: "", gridSpan: 6 },
+          { name: "pan_number", label: "Pan no", type: "value", required: true, placeholder: "Enter Pan number", gridSpan: 6 },
+          
+        ]
+      },
+      {
+        columns: 2,
+        fields: [
+          {
+            name: "status",
+            label: "Status",
+            type: "radio",
+            options: [
+              { value: "active", label: "Active" },
+              { value: "inactive", label: "Inactive" },
+            ],
+          },
+          { name: "gstin", label: "GST NO", type: "text", placeholder: "Enter your GST NO", gridSpan: 6 },
+        ]
+      },
+      {
+        columns: 1,
+        fields: [
+          { name: "address", label: "Address", type: "editor", placeholder: "Enter address", rows: 4 },
+        ],
+      },
+      
+
 
     ],
   },
@@ -118,7 +144,7 @@ export const DealersModuleSchema = {
     email: z.preprocess((value) => (value == null ? "" : String(value)), z.string().trim().min(1, "Email is required").regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address")),
     // email: z.preprocess( (value) => (value == null ? "" : String(value)), z .string() .trim() .min(1, "Email is required") .email("Invalid email address") ),
     // gstin: z.preprocess((value) => (value == null ? "" : String(value).toUpperCase()), z.string().trim().min(1, "GSTIN is required").regex(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/, "Invalid GSTIN")),
-   gstin: z.preprocess( (value) => (value == null ? "" : String(value).toUpperCase()), z.string() .trim() .min(1, "GSTIN is required") ),
+    gstin: z.preprocess((value) => (value == null ? "" : String(value).toUpperCase()), z.string().trim().min(1, "gst is required")),
     // gstin: z.preprocess( (value) => { if (value == null || value === "") return undefined; return String(value).toUpperCase(); }, z.string() .regex( /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/, "Invalid GSTIN" ) .optional() ),
     credit_limit: z.preprocess((value) => (value == null ? "" : String(value)), z.string().trim().min(1, "Credit limit is required").regex(/^\d+$/, "Invalid credit limit"))
   }),

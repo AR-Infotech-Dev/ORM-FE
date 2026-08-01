@@ -7,6 +7,7 @@ import companyMasterReducer from "@modules/company-master/data/companyMaster.sli
 import menuMasterReducer from "@modules/menu-master/data/menuMaster.slice";
 import dealerMasterReducer from "@modules/dealer/data/dealer.slice";
 import userroleReducer from "@modules/user-role/data/userrole.slice";
+import myTeamReducer from "@modules/myTeams/data/myTeams.slice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     menuMaster: menuMasterReducer,
     dealers: dealerMasterReducer,
     userrole: userroleReducer,
+    myTeam: myTeamReducer,
   },
 });
 

@@ -25,6 +25,8 @@ function SmartSelect({ field, value, onSelect, onObjectSelect, config = {}, erro
 
   const fetchOptions = async () => {
     try {
+      console.log(apiUrl);
+      
       setLoading(true);
       const res = await makeRequest(apiUrl, {
         method: "POST",
