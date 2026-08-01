@@ -20,6 +20,7 @@ const AccessControlModulePage = lazy(() => import("@modules/access-control/Acces
 const UserProfilePage = lazy(() => import("@modules/profile/UserProfilePage"));
 const DealerModulePage = lazy(() => import("@modules/dealer/DealerModulePage"));
 const UserRoleModulePage = lazy(() => import("@modules/user-role/UserRoleModulePage"));
+const MyTeamsModulePage = lazy(() => import("@modules/myTeams/MyTeamsModulePage"));
 
 const withPermission = (menuId, element) => (
   <PermissionRoute menuId={menuId}>{element}</PermissionRoute>
@@ -41,6 +42,7 @@ const menuRouteComponents = {
   "/company-master": CompanyMasterModulePage,
   "/user-role": UserRoleModulePage ,
   "/access-control": AccessControlModulePage,
+  "/myTeams": MyTeamsModulePage,
 };
 
 function DefaultMenuRedirect() {
