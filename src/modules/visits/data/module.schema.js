@@ -83,8 +83,6 @@ export const visitsModuleSchema = {
   savedFilters: [
 
   ],
-
-
   form: {
     initialValues: {
       visit_id: null,
