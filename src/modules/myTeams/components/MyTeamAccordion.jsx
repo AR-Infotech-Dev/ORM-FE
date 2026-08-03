@@ -37,7 +37,7 @@ function MyTeamAccordion({
           </div>
           <div className="flex flex-col">
             <span className="font-semibold text-sm">{row.name}</span>
-            <span className="text-xs text-gray-500">{row.roleID}</span>
+            <span className="text-xs text-gray-500">{row.roleName || "-"}</span>
           </div>
         </div>
         <div className="flex justify-center">
