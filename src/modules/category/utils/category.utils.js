@@ -32,6 +32,6 @@ export function normalizeCategorySavePayload(formData = {}) {
   return {
     ...formData,
     slug: slugifyCategory(formData.slug || formData.categoryName),
-    parent_id: formData.is_parent === "yes" ? "" : formData.parent_id,
+    parent_id: formData.is_parent === "yes" ? null : formData.parent_id,
   };
 }
