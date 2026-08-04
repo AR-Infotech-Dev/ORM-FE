@@ -29,7 +29,7 @@ export const usersModuleSchema = {
     // Keep joined field metadata here so future modules can reuse the same pattern.
     // If you have dropdown APIs later, options can be filled dynamically from here.
     {
-      field: "reporting_to_user_id",
+      field: "reporting_to",
       fieldtype: "joined",
       joinedTable: "admin",
       select: "adminID,name",
@@ -68,7 +68,7 @@ export const usersModuleSchema = {
     { userName: "User Name" },
     { roleID: "User Role" },
 
-    { reporting_to_user_id: "Reporting To" },
+    { reporting_to: "Assigned Manager" },
 
     { is_approver: "Approval Privileges" },
     { otp: "OTP" },
@@ -166,7 +166,7 @@ export const usersModuleSchema = {
           },
           {
             name: "reporting_to",
-            label: "Reporting manager To",
+            label: "Assigned Manager",
             type: "smartSelectInput",
             required: false,
             id: "reporting_to",
@@ -178,7 +178,7 @@ export const usersModuleSchema = {
               check: "name",
               getValue: (item) => item.adminID,
               getLabel: (item) => item.name || "Unnamed Sales Person",
-              placeholder: "Select Reporting manager to",
+              placeholder: "Select Assigned Manager",
               multi: false
             },
           },
