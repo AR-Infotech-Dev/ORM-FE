@@ -125,6 +125,7 @@ function Sidebar({ onSelectModule, isMobileOpen = false, onClose }) {
             {loading && <div className="p-3 text-xs text-slate-500">Loading menu...</div>}
             {!loading && sidebarGroups.length === 0 && (
               <div className="p-3 text-xs text-slate-500">No menu access</div>
+              
             )}
             {!loading &&
               sidebarGroups.map((group) => {

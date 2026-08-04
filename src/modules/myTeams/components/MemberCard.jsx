@@ -75,16 +75,14 @@ export default function MemberCard() {
                 <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
                         <Users size={16} className="text-[#7E8391]" />
-                        <span className="text-xs text-[#7E8391]">
-                            Reporting to
-                        </span>
+                        <span className="text-xs text-[#7E8391]">Reporting to</span>
                     </div>
                     <div className="text-right">
                         <p className="text-xs font-semibold text-[#2A2B2F]">
                             {member?.reporting_to_name || "-"}
                         </p>
                         <p className="text-xs text-[#919192]">
-                            {member?.reportingToRole || "-"}
+                            {member?.roleName || "-"}
                         </p>
                     </div>
                 </div>
