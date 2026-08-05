@@ -25,37 +25,55 @@ const iconMap = {
   Users,
   Workflow,
 };
-
 const getIcon = (iconName) => iconMap[iconName] || Folder;
 
-const buildSidebar = (menus = [], permissions = {}, user = {}) =>
-  buildAllowedMenuTree(menus, permissions, user).map((parent) => {
-    const children = parent?.subMenu || parent?.submenu || parent?.children || [];
-    const visibleChildren = children.map((child) => ({
-      id: getMenuId(child),
-      label: getMenuLabel(child),
-      path: normalizePath(getMenuLink(child)),
-      icon: getIcon(child.iconName),
-    }))
-      .filter((item) => item.path);
+const buildSidebar = (menus = [], permissions = {}, user = {}) => {
+  console.log("Original menus:", menus);
+  console.log("Permissions:", permissions);
 
-    const parentPath = normalizePath(getMenuLink(parent));
+  const tree = buildAllowedMenuTree(menus, permissions, user);
 
-    if (!parentPath && visibleChildren.length === 0) return null;
+  console.log("TREE =", JSON.stringify(tree, null, 2));
 
-    return {
-      id: getMenuId(parent),
-      title: getMenuLabel(parent),
-      path: parentPath,
-      icon: getIcon(parent.icon_name),
-      items: visibleChildren,
-    };
-  })
+  return tree
+    .map((parent) => {
+      const children =
+        parent?.subMenu || parent?.submenu || parent?.children || [];
+
+      const visibleChildren = children
+        .map((child) => ({
+          id: getMenuId(child),
+          label: getMenuLabel(child),
+          path: normalizePath(getMenuLink(child)),
+          icon: getIcon(child.icon_name),
+        }))
+        .filter((item) => item.path);
+
+      const parentPath = normalizePath(getMenuLink(parent));
+
+      console.log("Parent:", parent.menu_name);
+      console.log("Children:", visibleChildren);
+
+      if (!parentPath && visibleChildren.length === 0) return null;
+
+      return {
+        id: getMenuId(parent),
+        title: getMenuLabel(parent),
+        path: parentPath,
+        icon: getIcon(parent.icon_name),
+        items: visibleChildren,
+      };
+    })
     .filter(Boolean);
+};
+
 
 function Sidebar({ onSelectModule, isMobileOpen = false, onClose }) {
   const { authSession } = useAuth();
   const [menus, setMenus] = useState(() => getStoredMenuList());
+
+  console.log("Sidebar menu count =", menus.length);
+  console.log("Sidebar menus:", menus); // Debugging line to check the menus state
   const [loading, setLoading] = useState(() => !getStoredMenuList().length);
   const [collapsedGroups, setCollapsedGroups] = useState({});
   const permissions = useMemo(() => getStoredPermissions(), [authSession]);
@@ -63,6 +81,7 @@ function Sidebar({ onSelectModule, isMobileOpen = false, onClose }) {
     () => buildSidebar(menus, permissions, authSession?.user),
     [menus, permissions, authSession?.user]
   );
+  console.log("Sidebar sidebarGroups:", sidebarGroups); // Debugging line to check the menus state
 
   useEffect(() => {
     const syncMenus = (event) => {
@@ -91,67 +110,69 @@ function Sidebar({ onSelectModule, isMobileOpen = false, onClose }) {
 
   return (
     <>
-    <button
-      type="button"
-      className={`sidebar-backdrop ${isMobileOpen ? "is-visible" : ""}`}
-      onClick={onClose}
-      aria-label="Close navigation menu"
-      tabIndex={isMobileOpen ? 0 : -1}
-    />
-    <aside className={`sidebar ${isMobileOpen ? "mobile-open" : ""}`}>
-      <div className="sidebar-brand" title={APP_NAME}>
-        <img
-          // src="/logo 1.png"
-          src="/logo 1 (1).png"
-          alt={APP_NAME}
-          className="sidebar-logo"
-        />
-        <span className="sidebar-brand-fallback">{APP_NAME}</span>
-        <button
-          type="button"
-          className="sidebar-mobile-close"
-          onClick={onClose}
-          aria-label="Close navigation menu"
-        >
-          <X size={18} />
-        </button>
-      </div>
+      <button
+        type="button"
+        className={`sidebar-backdrop ${isMobileOpen ? "is-visible" : ""}`}
+        onClick={onClose}
+        aria-label="Close navigation menu"
+        tabIndex={isMobileOpen ? 0 : -1}
+      />
+      <aside className={`sidebar ${isMobileOpen ? "mobile-open" : ""}`}>
+        <div className="sidebar-brand" title={APP_NAME}>
+          <img
+            // src="/logo 1.png"
+            src="/logo 1 (1).png"
+            alt={APP_NAME}
+            className="sidebar-logo"
+          />
+          <span className="sidebar-brand-fallback">{APP_NAME}</span>
+          <button
+            type="button"
+            className="sidebar-mobile-close"
+            onClick={onClose}
+            aria-label="Close navigation menu"
+          >
+            <X size={18} />
+          </button>
+        </div>
 
-      <div className="sidebar-sections">
-        <section className="sidebar-group">
-          <div className="sidebar-group-title px-2">Main Menu</div>
+        <div className="sidebar-sections">
+          <section className="sidebar-group">
+            <div className="sidebar-group-title px-2">Main Menu</div>
 
-          <div className="sidebar-group-items">
-            {loading && <div className="p-3 text-xs text-slate-500">Loading menu...</div>}
-            {!loading && sidebarGroups.length === 0 && (
-              <div className="p-3 text-xs text-slate-500">No menu access</div>
-            )}
-            {!loading &&
-              sidebarGroups.map((group) => {
-                const Icon = group.icon;
-                const isCollapsed = collapsedGroups[group.id];
+            <div className="sidebar-group-items">
+              {loading && <div className="p-3 text-xs text-slate-500">Loading menu...</div>}
+              {!loading && sidebarGroups.length === 0 && (
+                <div className="p-3 text-xs text-slate-500">No menu access</div>
+              )}
+              {!loading &&
+                sidebarGroups.map((group) => {
+                  const Icon = group.icon;
+                  const isCollapsed = collapsedGroups[group.id];
 
-                if (group.items.length) {
-                  return (
-                    <div key={group.id} className="sidebar-group">
-                      <button
-                        type="button"
-                        className="sidebar-group-title sidebar-group-toggle"
-                        onClick={() =>
-                          setCollapsedGroups((current) => ({
-                            ...current,
-                            [group.id]: !current[group.id],
-                          }))
-                        }
-                      >
-                        <span className="flex items-center gap-2">
-                          <Icon size={16} /> {group.title}
-                        </span>
-                        <ChevronDown size={14} className={isCollapsed ? "is-collapsed" : ""} />
-                      </button>
+                  if (group.items.length) {
+                    return (
+                      <div key={group.id} className="sidebar-group">
+                        <button
+                          type="button"
+                          className="sidebar-group-title sidebar-group-toggle"
+                          onClick={() =>
+                            setCollapsedGroups((current) => ({
+                              ...current,
+                              [group.id]: !current[group.id],
+                            }))
+                          }
+                        >
+                          <span className="flex items-center gap-2">
+                            <Icon size={16} /> {group.title}
+                          </span>
+                          <ChevronDown size={14} className={isCollapsed ? "is-collapsed" : ""} />
+                        </button>
 
-                      {!isCollapsed && (
-                        <div className="sidebar-group-items">
+                        <div
+                          className={`sidebar-group-items ${isCollapsed ? "collapsed" : "expanded"
+                            }`}
+                        >
                           {group.items.map((item) => {
                             const ItemIcon = item.icon;
                             return (
@@ -173,41 +194,41 @@ function Sidebar({ onSelectModule, isMobileOpen = false, onClose }) {
                             );
                           })}
                         </div>
+                      
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <NavLink
+                      key={group.id}
+                      to={group.path}
+                      className="no-underline"
+                      onClick={() => onSelectModule?.(group.path)}
+                    >
+                      {({ isActive }) => (
+                        <button className={`sidebar-item w-full ${isActive ? "active" : ""}`}>
+                          <span className="sidebar-icon">
+                            <Icon size={16} />
+                          </span>
+                          <span>{group.title}</span>
+                        </button>
                       )}
-                    </div>
+                    </NavLink>
                   );
-                }
+                })}
+            </div>
+          </section>
+        </div>
 
-                return (
-                  <NavLink
-                    key={group.id}
-                    to={group.path}
-                    className="no-underline"
-                    onClick={() => onSelectModule?.(group.path)}
-                  >
-                    {({ isActive }) => (
-                      <button className={`sidebar-item w-full ${isActive ? "active" : ""}`}>
-                        <span className="sidebar-icon">
-                          <Icon size={16} />
-                        </span>
-                        <span>{group.title}</span>
-                      </button>
-                    )}
-                  </NavLink>
-                );
-              })}
-          </div>
-        </section>
-      </div>
-
-      {/* <div className="sync-card">
+        {/* <div className="sync-card">
         <div className="sync-ring" />
         <div>
           <div className="sync-title">CRM Connected</div>
           <div className="sync-subtitle">Permission menu loaded</div>
         </div>
       </div> */}
-    </aside>
+      </aside>
     </>
   );
 }

@@ -8,9 +8,16 @@ export function normalizeProductData(product = {}) {
   return {
     ...productsModuleSchema.form.initialValues,
     ...product,
-    product_name: product?.product_name || product?.productName || product?.name || "",
-    product_type: product?.product_type || "",
-    product_description: product?.product_description || "",
+    product_name: product?.product_name || product?.productName || product?.name || null,
+    product_type: product?.product_type || null,
+    product_description: product?.product_description || null,
+    sku: product?.sku || null,
+    // category_id: product?.category_id || "",
+    unit: product?.unit || null,
+    mrp: product?.mrp || null,
+    sale_price: product?.sale_price || null,
+    tax_rate: product?.tax_rate || null,
+
     company_id: product?.company_id || null,
   };
 }
@@ -18,8 +25,13 @@ export function normalizeProductData(product = {}) {
 export function normalizeProductSavePayload(formData = {}) {
   const payload = {
     product_name: formData.product_name,
-    product_type: formData.product_type || null,
-    product_description: formData.product_description || null,
+    product_type: formData.product_type,
+    // category_id: formData.category_id,
+    unit: formData.unit,
+    sku: formData.sku,
+    sale_price: Number(formData.sale_price),
+    status: formData.status,
+    product_description: formData.product_description,
   };
 
   if (formData.product_id) payload.product_id = formData.product_id;
