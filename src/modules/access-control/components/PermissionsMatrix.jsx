@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { ChevronRight, ChevronDown } from "lucide-react";
+import { ChevronRight, ChevronDown, Folder } from "lucide-react";
 import { accessPermissionColumns } from "../data/accessControlData";
 import PermissionToggle from "./PermissionToggle";
+
+
 
 
 function PermissionsEmptyState() {
@@ -53,7 +55,7 @@ function PermissionsMatrix({
     ),
   }));
   return (
-    <section className="min-w-0 overflow-hidden border border-slate-200 bg-white">
+    <section className="min-w-0 border border-slate-200 bg-white flex flex-col flex-1 min-h-0">
       <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
         <h3 className="text-sm font-semibold text-slate-700">Module Permissions</h3>
         <div className="flex items-center gap-1 text-xs text-slate-500">
@@ -77,9 +79,9 @@ function PermissionsMatrix({
           Loading permissions...
         </div>
       ) : (
-        <div className="max-h-[600px] overflow-auto ">
-          <div className="min-w-[680px]">
-            <div className="sticky top-0 z-20 grid grid-cols-[minmax(180px,1fr)_80px_80px_80px_80px_110px] border-b border-slate-200 bg-slate-50 px-4 py-2 text-[11px] font-bold uppercase tracking-wide text-slate-500">
+        <div className="flex-1 min-h-0 overflow-auto">
+          <div className="min-w-[600px]">
+            <div className="sticky top-0 z-10 grid grid-cols-[minmax(180px,1fr)_80px_80px_80px_80px_110px] border-b border-slate-200 bg-slate-50 px-4 py-2 text-[11px] font-bold uppercase tracking-wide text-slate-500">
               <div>Module</div>
               {accessPermissionColumns.map((column) => (
                 <div key={column.key} className="text-center">
@@ -90,9 +92,7 @@ function PermissionsMatrix({
             </div>
 
             {moduleTree.map((module) => {
-              const Icon = module.icon;
-
-
+             const Icon = module.icon;
               return (
                 <div key={module.id}>
                   <div
@@ -165,61 +165,64 @@ function PermissionsMatrix({
                   </div>
 
 
-                  {expandedModules.includes(module.id) &&
-                    module.children?.map((child) => (
+      {expandedModules.includes(module.id) &&
+  module.children?.map((child) => {
+    const ChildIcon = child.icon || Icon;
 
-                      <div
-                        key={child.id}
-                        className="grid min-h-11 grid-cols-[minmax(180px,1fr)_80px_80px_80px_80px_110px] items-center border-b border-slate-100 bg-slate-50 px-4 text-xs text-slate-700 transition-all duration-300 ease-in-out hover:bg-slate-100"
-                      >
-                        <div className="flex items-center gap-2 pl-8">
-                          <Icon
-                            size={15}
-                            className="shrink-0 text-slate-400"
-                          />
+    return (
+      <div
+        key={child.id}
+        className="grid min-h-11 grid-cols-[minmax(180px,1fr)_80px_80px_80px_80px_110px] items-center border-b border-slate-100 bg-slate-50 px-4 text-xs text-slate-700 hover:bg-slate-100"
+      >
+        <div className="flex items-center gap-2 pl-8">
+          <ChildIcon
+            size={15}
+            className="shrink-0 text-slate-400"
+          />
 
-                          <span>
-                            {child.name.includes("/")
-                              ? child.name.split("/").pop().trim()
-                              : child.name}
-                          </span>
-                        </div>
+          <span>
+            {child.name.includes("/")
+              ? child.name.split("/").pop().trim()
+              : child.name}
+          </span>
+        </div>
 
-                        {accessPermissionColumns.map((column) => {
-                          const supported = Boolean(child.supports?.[column.key]);
-                          const disabled =
-                            !supported ||
-                            (column.key !== "view" && !child.permissions?.view);
+        {accessPermissionColumns.map((column) => {
+          const supported = Boolean(child.supports?.[column.key]);
+          const disabled =
+            !supported ||
+            (column.key !== "view" && !child.permissions?.view);
 
-                          return (
-                            <div key={column.key} className="text-center">
-                              {supported ? (
-                                <PermissionToggle
-                                  checked={Boolean(child.permissions?.[column.key])}
-                                  disabled={disabled}
-                                  onChange={(nextValue) =>
-                                    onPermissionChange(child.id, column.key, nextValue)
-                                  }
-                                />
-                              ) : (
-                                <span className="text-slate-300">-</span>
-                              )}
-                            </div>
-                          );
-                        })}
+          return (
+            <div key={column.key} className="text-center">
+              {supported ? (
+                <PermissionToggle
+                  checked={Boolean(child.permissions?.[column.key])}
+                  disabled={disabled}
+                  onChange={(nextValue) =>
+                    onPermissionChange(child.id, column.key, nextValue)
+                  }
+                />
+              ) : (
+                <span className="text-slate-300">-</span>
+              )}
+            </div>
+          );
+        })}
 
-                        <div className="text-center">
-                          <button
-                            type="button"
-                            disabled={!child.permissions?.view}
-                            className="text-xs font-semibold text-blue-600 hover:text-blue-700 disabled:text-slate-300"
-                            onClick={() => onConfigure(child.id)}
-                          >
-                            Configure
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+        <div className="text-center">
+          <button
+            type="button"
+            disabled={!child.permissions?.view}
+            className="text-xs font-semibold text-blue-600 hover:text-blue-700 disabled:text-slate-300"
+            onClick={() => onConfigure(child.id)}
+          >
+            Configure
+          </button>
+        </div>
+      </div>
+    );
+  })}
                 </div>
               );
             })}
