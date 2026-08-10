@@ -1555,19 +1555,17 @@ button {
 .module-page {
   display: flex;
   flex: 1;
+  height: 100%;
   min-height: 0;
+  overflow: hidden;
   flex-direction: column;
-  gap: 0px;
-  padding: 0px 0px 16px 0px;
-  /* padding: 0px; */
 }
-
 .module-page-header {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 12px;
-  min-height: 38px;
+  min-height: 25px;
   padding: 4px 260px 10px 0;
 }
 
@@ -1600,11 +1598,14 @@ button {
   box-shadow: none;
 }
 
-.module-controls-card {
-  position: relative;
-  padding: 8px 10px;
+.module-controls-card{
+    position:relative;
+    /* display:flex;
+    flex-direction:column;
+    flex:1;
+    min-height:0; */
+    padding:8px 10px;
 }
-
 .module-controls {
   display: flex;
   flex-direction: column;
@@ -6380,6 +6381,14 @@ table input[type="checkbox"]:focus-visible {
     min-width: 112px;
   }
 
+  .hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
   .dynamic-filter-root .border-blue-100 {
     gap: 3px;
     padding-right: 5px;

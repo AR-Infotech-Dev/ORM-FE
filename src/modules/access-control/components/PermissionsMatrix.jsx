@@ -92,7 +92,7 @@ function PermissionsMatrix({
             </div>
 
             {moduleTree.map((module) => {
-             const Icon = module.icon;
+              const Icon = module.icon;
               return (
                 <div key={module.id}>
                   <div
@@ -134,7 +134,6 @@ function PermissionsMatrix({
                       const disabled =
                         !supported ||
                         (column.key !== "view" && !module.permissions.view);
-
                       return (
                         <div key={column.key} className="text-center">
                           {supported ? (
@@ -164,65 +163,69 @@ function PermissionsMatrix({
                     </div>
                   </div>
 
+                  {console.log("module.children", module)}
+                  {expandedModules.includes(module.id) &&
+                    module.children?.map((child) => {
+                      const ChildIcon = child.icon || Icon;
+                      const parent = modules.find(
+                        (m) => m.menu_id === child.parent_id
+                      );
 
-      {expandedModules.includes(module.id) &&
-  module.children?.map((child) => {
-    const ChildIcon = child.icon || Icon;
+                      return (
+                        <div
+                          key={child.id}
+                          className="grid min-h-11 grid-cols-[minmax(180px,1fr)_80px_80px_80px_80px_110px] items-center border-b border-slate-100 bg-slate-50 px-4 text-xs text-slate-700 hover:bg-slate-100"
+                        >
+                          <div className="flex items-center gap-2 pl-8">
+                            <ChildIcon
+                              size={15}
+                              className="shrink-0 text-slate-400"
+                            />
 
-    return (
-      <div
-        key={child.id}
-        className="grid min-h-11 grid-cols-[minmax(180px,1fr)_80px_80px_80px_80px_110px] items-center border-b border-slate-100 bg-slate-50 px-4 text-xs text-slate-700 hover:bg-slate-100"
-      >
-        <div className="flex items-center gap-2 pl-8">
-          <ChildIcon
-            size={15}
-            className="shrink-0 text-slate-400"
-          />
+                            <span>
+                              {child.name.includes("/")
+                                ? child.name.split("/").pop().trim()
+                                : child.name}
+                            </span>
+                          </div>
 
-          <span>
-            {child.name.includes("/")
-              ? child.name.split("/").pop().trim()
-              : child.name}
-          </span>
-        </div>
+                          {accessPermissionColumns.map((column) => {
+                            const supported = Boolean(child.supports?.[column.key]);
+                            const disabled =
+                              !supported ||
+                              !parent?.permissions?.view ||
+                              (column.key !== "view" && !child.permissions?.view);
 
-        {accessPermissionColumns.map((column) => {
-          const supported = Boolean(child.supports?.[column.key]);
-          const disabled =
-            !supported ||
-            (column.key !== "view" && !child.permissions?.view);
+                            return (
+                              <div key={column.key} className="text-center">
+                                {supported ? (
+                                  <PermissionToggle
+                                    checked={Boolean(child.permissions?.[column.key])}
+                                    disabled={disabled}
+                                    onChange={(nextValue) =>
+                                      onPermissionChange(child.id, column.key, nextValue)
+                                    }
+                                  />
+                                ) : (
+                                  <span className="text-slate-300">-</span>
+                                )}
+                              </div>
+                            );
+                          })}
 
-          return (
-            <div key={column.key} className="text-center">
-              {supported ? (
-                <PermissionToggle
-                  checked={Boolean(child.permissions?.[column.key])}
-                  disabled={disabled}
-                  onChange={(nextValue) =>
-                    onPermissionChange(child.id, column.key, nextValue)
-                  }
-                />
-              ) : (
-                <span className="text-slate-300">-</span>
-              )}
-            </div>
-          );
-        })}
-
-        <div className="text-center">
-          <button
-            type="button"
-            disabled={!child.permissions?.view}
-            className="text-xs font-semibold text-blue-600 hover:text-blue-700 disabled:text-slate-300"
-            onClick={() => onConfigure(child.id)}
-          >
-            Configure
-          </button>
-        </div>
-      </div>
-    );
-  })}
+                          <div className="text-center">
+                            <button
+                              type="button"
+                              disabled={!child.permissions?.view}
+                              className="text-xs font-semibold text-blue-600 hover:text-blue-700 disabled:text-slate-300"
+                              onClick={() => onConfigure(child.id)}
+                            >
+                              Configure
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
                 </div>
               );
             })}
