@@ -1,17 +1,3 @@
-
-import { useAppSelector, useModuleFilters } from "@store/hooks";
-export const useRedirectFilter = () => {
-
-    const applyTicketRedirectFilter = (label = '') => {
-        switch (label) {
-            default:
-                break;
-        }
-    }
-    return {};
-};
-
-
 // import { useAppSelector, useModuleFilters } from "@store/hooks";
 // import { selectTicketsDefaultFilters } from "@modules/tickets/data/tickets.slice";
 // export const useRedirectFilter = () => {
@@ -51,7 +37,7 @@ export const useRedirectFilter = () => {
 //                     filters: [
 //                         {
 //                             field: "created_date",
-//                             condition: "today",S
+//                             condition: "today",
 //                             type: "date",
 //                             value: ""
 //                         }
@@ -85,3 +71,16 @@ export const useRedirectFilter = () => {
 //         applyTicketRedirectFilter
 //     };
 // };
+
+
+ import { useAppSelector, useModuleFilters } from "@store/hooks";
+export const useRedirectFilter = () => {
+
+    const applyTicketRedirectFilter = (label = '') => {
+        switch (label) {
+            default:
+                break;
+        }
+    }
+    return {};
+};
