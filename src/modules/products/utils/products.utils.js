@@ -24,15 +24,14 @@ export function normalizeProductData(product = {}) {
 
 export function normalizeProductSavePayload(formData = {}) {
   const payload = {
-    product_name: formData.product_name ??"",
-    product_type: formData.product_type ??"",
-    product_description: formData.product_description ??"",
-    sku: formData.sku ??"",
-    category_id: formData.category_id ??"",
-    unit: formData.unit ??"",
-    mrp: formData.mrp ??"",
-    sale_price: formData.sale_price ??"",
-    tax_rate: formData.tax_rate ??"",
+    product_name: formData.product_name,
+    product_type: formData.product_type,
+    // category_id: formData.category_id,
+    unit: formData.unit,
+    sku: formData.sku,
+    sale_price: Number(formData.sale_price),
+    status: formData.status,
+    product_description: formData.product_description,
   };
 
   if (formData.product_id) payload.product_id = formData.product_id;

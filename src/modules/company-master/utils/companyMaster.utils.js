@@ -1,110 +1,64 @@
 import { API_SERVER_URL } from "@/api/config";
 import { companyMasterSchema } from "../data/module.schema";
 
-export const MAIL_PROVIDER_DEFAULTS = {
-  gmail: { smtp_host: "smtp.gmail.com", smtp_port: "587", smtp_encryption: "tls", smtp_username: "" },
-  yahoo: { smtp_host: "smtp.mail.yahoo.com", smtp_port: "587", smtp_encryption: "tls", smtp_username: "" },
-  outlook: { smtp_host: "smtp.office365.com", smtp_port: "587", smtp_encryption: "tls", smtp_username: "" },
-  custom: { smtp_host: "", smtp_port: "587", smtp_encryption: "tls", smtp_username: "" },
-};
-
-import {
-  CircleCheck,
-  CircleX,
-  MailCheck,
-  Database,
-  Wifi,
-  LoaderCircle,
-  TriangleAlert,
-} from "lucide-react";
-
-export const getCompanyIdentifier = (company = {}) => company?.company_id;
+export const getCompanyIdentifier = (company = {}) =>
+  company?.company_id;
 
 export const getLogoUrl = (logo = "") => {
   if (!logo) return "";
   if (/^https?:\/\//i.test(logo)) return logo;
-  return `${API_SERVER_URL}${String(logo).startsWith("/") ? logo : `/${logo}`}`;
+
+  return `${API_SERVER_URL}${
+    String(logo).startsWith("/") ? logo : `/${logo}`
+  }`;
 };
 
 export const getLogoPathFromResponse = (response = {}) =>
-  response?.data?.email_logo ||
-  response?.data?.data?.email_logo ||
+  response?.data?.company_logo ||
+  response?.data?.data?.company_logo ||
   response?.data?.logo ||
   response?.data?.data?.logo ||
   response?.data?.path ||
   response?.data?.data?.path ||
   response?.data?.url ||
   response?.data?.data?.url ||
-  response?.email_logo ||
+  response?.company_logo ||
   response?.logo ||
   response?.path ||
   response?.url ||
   "";
 
-export const buildMailConfigPayload = (formData = {}) => {
-  const providerDefaults = MAIL_PROVIDER_DEFAULTS[formData.mail_provider] || MAIL_PROVIDER_DEFAULTS.gmail;
-  const smtpUsername = formData.mail_provider === "custom"
-    ? formData.smtp_username
-    : formData.smtp_username || formData.sender_email;
-
-  return {
-    smtp_host: formData.smtp_host || providerDefaults.smtp_host,
-    smtp_port: formData.smtp_port || providerDefaults.smtp_port,
-    smtp_encryption: formData.smtp_encryption || providerDefaults.smtp_encryption,
-    smtp_username: smtpUsername,
-  };
-};
-
 export const normalizeCompanyData = (company = {}) => {
-  const provider = company?.mail_provider || "gmail";
-  const providerDefaults = MAIL_PROVIDER_DEFAULTS[provider] || MAIL_PROVIDER_DEFAULTS.gmail;
-
   return {
     ...companyMasterSchema.form.initialValues,
     ...company,
+
+    company_id: company?.company_id ?? null,
     company_name: company?.company_name || "",
-    sender_email: company?.sender_email || "",
-    cc_email: company?.cc_email || "",
-    sender_name: company?.sender_name || "",
-    mail_provider: provider,
-    smtp_host: company?.smtp_host || providerDefaults.smtp_host,
-    smtp_port: company?.smtp_port || providerDefaults.smtp_port,
-    smtp_encryption: company?.smtp_encryption || providerDefaults.smtp_encryption,
-    smtp_username: company?.smtp_username || "",
-    mail_connection_status: company?.mail_connection_status || "not_tested",
-    mail_last_tested_at: company?.mail_last_tested_at || null,
-    email_app_password: company?.email_app_password || "",
+    legal_name: company?.legal_name || "",
+    email: company?.email || "",
     mobile_number: company?.mobile_number || "",
-    company_address: company?.company_address || "",
-    country: company?.country || "",
-    state: company?.state || "",
-    city: company?.city || "",
-    zip: company?.zip || "",
-    pan: company?.pan || "",
-    time_format: company?.time_format || "DD-MM-YYYY",
-    date_format: company?.date_format || "DD-MM-YYYY",
-    email_logo: company?.email_logo || "",
-    status: company?.status || "active",
+    gstin: company?.gstin || "",
+    company_logo: company?.company_logo || "",
+    order_prefix: company?.order_prefix || "",
+    next_order_number: company?.next_order_number || "",
+    order_number_format: company?.order_number_format || "",
+    financial_year: company?.financial_year || "",
+    date_format: company?.date_format || "",
+    default_currency: company?.default_currency || "",
+    default_payment_term: company?.default_payment_term || "",
+    order_validity_days: company?.order_validity_days || "",
+    terms_condition: company?.terms_condition || "",
+
+    tax_name: company?.tax_name || "",
+    tax_code: company?.tax_code || "",
+    gst_rate: company?.gst_rate || "",
+    cgst_rate: company?.cgst_rate || "",
+    sgst_rate: company?.sgst_rate || "",
+    igst_rate: company?.igst_rate || "",
+    hsn_sac_code: company?.hsn_sac_code || "",
+    effective_from: company?.effective_from || "",
+    tax_status: company?.tax_status || "active",
   };
 };
-
-export const getEmailConnectionBadge = (status = "not_tested") => {
   
-  if (status === "connected") {
-    return { icon: MailCheck, title: 'Email Connected', label: "Connected", className: "bg-green-50 text-green-700 border-green-200", };
-  }
-
-  if (status === "failed") {
-    return { icon: MailCheck, title: 'Email Failed', label: "Failed", className: "bg-red-50 text-red-700 border-red-200", };
-  }
-
-  return { icon: MailCheck, title: 'Email Not Tested', label: "Not Tested", className: "bg-slate-50 text-slate-600 border-slate-200", };
-};
-
-export const getDBConnectionBadge = (status = "not_connected") => {
-  if (status === "connected") {
-    return { icon: Database, title: 'DB Connected', label: "Connected", className: "bg-green-50 text-green-700 border-green-200", iconClassName: "" };
-  }
-
-  return { icon: Database, title: 'DB Not Connected', label: "Not Connected", className: "bg-amber-50 text-amber-600 border-amber-200", iconClassName: "animate-pulse" };
-};

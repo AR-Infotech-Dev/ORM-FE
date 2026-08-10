@@ -11,7 +11,7 @@ function ModulePageLayout({
 }) {
   return (
     <section className="module-page">
-      <div className="module-controls-card">
+     <div className="module-controls-card">
         <div className={`module-page-header ${classNames}`}>
           <div className="module-page-heading">
             <h2 className="module-page-title">{title}</h2>

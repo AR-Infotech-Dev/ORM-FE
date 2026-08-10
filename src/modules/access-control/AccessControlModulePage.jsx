@@ -60,7 +60,7 @@ function AccessControlModulePage() {
           </div>
         }
       >
-        <div className="mt-1 grid min-h-full grid-cols-1 gap-1.5 xl:grid-cols-[290px_minmax(0,1fr)]">
+        <div className="mt-1 h-[calc(100vh-125px)] grid grid-cols-[290px_minmax(0,1fr)] gap-1.5">
           <IdentitySelector
             companyId={currentCompanyId}
             selectedIdentity={selectedIdentity}

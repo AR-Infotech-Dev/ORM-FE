@@ -1,8 +1,18 @@
+import { useState } from "react";
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Edit3, Folder, GripVertical, Link2, Settings, Trash2 } from "lucide-react";
-import {ICONS} from "../data/module.schema"
+import {
+  Edit3,
+  Folder,
+  GripVertical,
+  Link2,
+  Settings,
+  Trash2,
+  ChevronRight,
+  ChevronDown,
+} from "lucide-react";
+import { ICONS } from "../data/module.schema"
 const getMenuId = (menu = {}) => menu?.menu_id ?? menu?.menuID ?? menu?.id;
 const getMenuName = (menu = {}) => menu?.menu_name || menu?.menuName || menu?.label || "Untitled menu";
 const getModuleName = (menu = {}) => menu?.module_name || menu?.moduleName || "-";
@@ -23,6 +33,9 @@ function MenuListSkeleton() {
 
 function MenuRow({
   menu,
+  level = 0,
+  expanded,
+  toggleMenu,
   canEdit,
   canDelete,
   canSort,
@@ -31,8 +44,13 @@ function MenuRow({
   onConfigure,
 }) {
   const menuId = getMenuId(menu);
-  const Icon = getIcon(menu);
-  const status = String(getStatus(menu)).toLowerCase();
+const Icon = getIcon(menu);
+const status = String(getStatus(menu)).toLowerCase();
+
+const hasChildren =
+  (menu.children?.length ?? 0) > 0 ||
+  menu.is_parent === "y";
+
 
   const {
     attributes,
@@ -61,24 +79,47 @@ function MenuRow({
         <GripVertical size={16} />
       </button>
 
-      <div className="flex min-w-0 items-center gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-indigo-50 text-indigo-600">
-          <Icon size={16} />
-        </div>
+      <div
+  className="flex min-w-0 items-center gap-3"
+ style={{ paddingLeft: `${level * 30}px` }}
+>
+  {hasChildren ? (
+    <button
+      type="button"
+     onClick={() => toggleMenu(menuId)}
+      className="rounded p-1 hover:bg-gray-200"
+    >
+      {expanded ? (
+        <ChevronDown size={16} />
+      ) : (
+        <ChevronRight size={16} />
+      )}
+    </button>
+  ) : (
+    <div className="w-6" />
+  )}
 
-        <div className="min-w-0">
-          <button
-            type="button"
-            // Edit permission controls whether row title opens the flyout.
-            onClick={canEdit ? () => onEdit?.(menu) : undefined}
-            className={`block max-w-full truncate text-left text-sm font-semibold text-slate-700 ${canEdit ? "hover:text-blue-600" : "cursor-default"}`}
-          >
-            {getMenuName(menu)}
-          </button>
-          <div className="mt-1 text-xs text-slate-500">ID: {menuId}</div>
-        </div>
-      </div>
+  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-indigo-50 text-indigo-600">
+    <Icon size={16} />
+  </div>
 
+  <div className="min-w-0">
+    <button
+      type="button"
+      onClick={canEdit ? () => onEdit?.(menu) : undefined}
+      className={`block max-w-full truncate text-left text-sm font-semibold text-slate-700 ${
+        canEdit ? "hover:text-blue-600" : "cursor-default"
+      }`}
+    >
+      {getMenuName(menu)}
+    </button>
+
+    <div className="mt-1 text-xs text-slate-500">
+      ID: {menuId}
+    </div>
+  </div>
+</div>
+       
       <div className="truncate text-sm text-slate-700">{getModuleName(menu)}</div>
 
       <div className="flex min-w-0 items-center gap-2 text-sm text-slate-500">
@@ -127,6 +168,54 @@ function MenuRow({
     </div>
   );
 }
+function MenuTree({
+  menus,
+  expandedMenus,
+  toggleMenu,
+  level = 0,
+  canEdit,
+  canDelete,
+  canSort,
+  onEdit,
+  onDelete,
+  onConfigure,
+}) {
+  return menus.map((menu) => (
+    <div key={getMenuId(menu)} className="bg-gray-200 border border-gray-200 ">
+      <MenuRow
+ menu={menu}
+  level={level}
+  expanded={expandedMenus.includes(getMenuId(menu))}
+  toggleMenu={toggleMenu}
+  canEdit={canEdit}
+  canDelete={canDelete}
+  canSort={canSort}
+  onEdit={onEdit}
+  onDelete={onDelete}
+  onConfigure={onConfigure}
+/>
+
+      {expandedMenus.includes(getMenuId(menu)) &&
+      menu.children?.length > 0 && (
+        <div className="ml-2">
+
+          <MenuTree
+            menus={menu.children}
+            expandedMenus={expandedMenus}
+            toggleMenu={toggleMenu}
+            level={level + 1}
+            canEdit={canEdit}
+            canDelete={canDelete}
+            canSort={canSort}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onConfigure={onConfigure}
+          />
+        </div>
+      )}
+    </div>
+  ));
+}
 
 function MenuList({
   rows = [],
@@ -139,23 +228,36 @@ function MenuList({
   onConfigure,
   onSortChange,
 }) {
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
-
+   
+  console.log("ROWS =", rows);
+  console.log("First Row =", rows[0]);
+  console.log("Children =", rows[0]?.children);
+const [expandedMenus, setExpandedMenus] = useState([]);
+const toggleMenu = (id) => {
+  setExpandedMenus((prev) =>
+    prev.includes(id)
+      ? prev.filter((item) => item !== id)
+      : [...prev, id]
+  );
+};
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 6 },
+    })
+  );
   const handleDragEnd = (event) => {
-    if (!canSort) return;
-
     const { active, over } = event;
 
-    if (!over || active.id === over.id) return;
+    if (!over) return;
 
-    const oldIndex = rows.findIndex((menu) => getMenuId(menu) === active.id);
-    const newIndex = rows.findIndex((menu) => getMenuId(menu) === over.id);
+    console.log("Dragged Menu =", active.id);
+    console.log("Dropped On =", over.id);
 
-    if (oldIndex < 0 || newIndex < 0) return;
-
-    // Only local row order changes here. Parent page shows Save Sequence and calls API.
-    onSortChange?.(arrayMove(rows, oldIndex, newIndex));
-  };
+    onSortChange?.({
+        activeId: active.id,
+        overId: over.id,
+    });
+};
 
   if (loading) {
     return (
@@ -182,27 +284,18 @@ function MenuList({
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={rows.map((menu) => getMenuId(menu))} strategy={verticalListSortingStrategy}>
-        <div className="space-y-2 overflow-x-auto" style={{"scrollbarWidth":"none"}}>
-          {/* <div className="grid min-w-[900px] grid-cols-[auto_minmax(220px,1.4fr)_minmax(150px,0.8fr)_minmax(180px,1fr)_90px_auto] gap-3 px-3 pb-1 text-xs font-semibold uppercase text-slate-500">
-            <div />
-            <div>Menu</div>
-            <div>Module</div>
-            <div>Link</div>
-            <div>Status</div>
-            <div className="text-right">Actions</div>
-          </div> */}
-          {rows.map((menu) => (
-            <MenuRow
-              key={getMenuId(menu)}
-              menu={menu}
-              canEdit={canEdit}
-              canDelete={canDelete}
-              canSort={canSort}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onConfigure={onConfigure}
-            />
-          ))}
+        <div className="space-y-2 overflow-x-auto" style={{ "scrollbarWidth": "none" }}>
+          <MenuTree
+            menus={rows}
+            expandedMenus={expandedMenus}
+            toggleMenu={toggleMenu}
+            canEdit={canEdit}
+            canDelete={canDelete}
+            canSort={canSort}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onConfigure={onConfigure}
+          />
         </div>
       </SortableContext>
     </DndContext>

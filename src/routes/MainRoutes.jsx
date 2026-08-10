@@ -8,6 +8,9 @@ import ProtectedRoute from "./ProtectedRoute";
 import PermissionRoute from "./PermissionRoute";
 import FlowupSLoader from "../components/ui/FlowupsLoader";
 
+
+
+
 const AppLayout = lazy(() => import("@layouts/AppLayout"));
 const Dashboard = lazy(() => import("@modules/dashboard/Dashboard"));
 const UsersModulePage = lazy(() => import("@modules/users/UsersModulePage"));
@@ -18,10 +21,10 @@ const CompanyMasterModulePage = lazy(() => import("@modules/company-master/Compa
 
 const AccessControlModulePage = lazy(() => import("@modules/access-control/AccessControlModulePage"));
 const UserProfilePage = lazy(() => import("@modules/profile/UserProfilePage"));
-const VisitPage = lazy(() => import("@modules/visits/VisitModulePage"));
-const DealerModulePage = lazy(() => import("@modules/dealer/DealerModulePage"));
-const UserRoleModulePage = lazy(() => import("@modules/user-role/UserRoleModulePage"));
-const MyTeamsModulePage = lazy(() => import("@modules/myTeams/MyTeamsModulePage"));
+// const MasterModulePage = lazy(() => import("@modules/master/MasterModulePage"));
+
+
+
 const withPermission = (menuId, element) => (
   <PermissionRoute menuId={menuId}>{element}</PermissionRoute>
 );
@@ -40,10 +43,10 @@ const menuRouteComponents = {
   "/companies": CompanyMasterModulePage,
   "/companyMaster": CompanyMasterModulePage,
   "/company-master": CompanyMasterModulePage,
-  "/user-role": UserRoleModulePage ,
+  // "/master": MasterModulePage,
   "/access-control": AccessControlModulePage,
-  "/visits": VisitPage,
-  "/myTeams": MyTeamsModulePage,
+  "/profile": UserProfilePage,
+
 };
 
 function DefaultMenuRedirect() {
@@ -60,7 +63,6 @@ function DefaultMenuRedirect() {
 
   return <NoMenuPermission />;
 }
-
 function RouteFallback({ loading }) {
   if (loading) {
     return <div className="p-6 text-sm text-slate-500">Loading menu...</div>;
