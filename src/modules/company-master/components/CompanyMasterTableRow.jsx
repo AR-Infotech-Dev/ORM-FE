@@ -1,15 +1,14 @@
-import { isAmcActive } from "@utils/amc";
-
 function CompanyMasterTableRow({ row, index, columns, table }) {
   const rowKey = table.getRowIdentifier(row) ?? row?.name ?? index;
-  const activeAmc = isAmcActive(row);
 
   return (
-    <tr key={rowKey} className={`group ${activeAmc ? "table-row-amc-active" : ""}`}>
+    <tr key={rowKey} className="group">
       {columns.map((column) => (
         <td
           key={column.key}
-          className={`${column.className || ""} ${column.isActionsColumn ? "table-actions-cell" : ""}`.trim()}
+          className={`${column.className || ""} ${
+            column.isActionsColumn ? "table-actions-cell" : ""
+          }`.trim()}
           style={table.getCellStyle(column)}
           onClick={table.getRowClick(column, row)}
         >
@@ -18,7 +17,6 @@ function CompanyMasterTableRow({ row, index, columns, table }) {
             : table.renderCell(column, row, index)}
         </td>
       ))}
-      <td></td>
     </tr>
   );
 }

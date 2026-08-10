@@ -30,53 +30,55 @@ export const productsModuleSchema = {
     { column_name: "product_type" },
     { column_name: "product_description", },
     { column_name: "sku" },
-    { column_name: "category_id" },
+    // { column_name: "category_id" },
     { column_name: "unit" },
-    { column_name: "mrp" },
     { column_name: "sale_price" },
-    { column_name: "tax_rate" },
+    { column_name: "status", type: "tag" },
+
+
 
   ],
-  defaultColumns: ["product_id", "product_name", "product_type", "product_description"],
-  skipFields: ["company_id", "created_by", "created_date", "modified_by", "modified_date", "category_id"],
+  defaultColumns: ["product_id", "product_name", "product_type", "sku", "category_id", "unit", "sale_price", "status",],
+  skipFields: ["company_id", "created_by", "created_date", "modified_by", "modified_date"],
   columnMappings: [
-    { product_id: "Product id" },
+    { product_id: "Product ID" },
+    { product_name: "Product Name" },
+    { product_type: "Product Type" },
     { product_description: "Description" },
     { sku: "SKU" },
+    // { category_id: "Category" },
+    { unit: "Unit" },
+    { sale_price: "Sale Price" },
+    { status: "Status" },
   ],
   savedFilters: [],
   form: {
     initialValues: {
-      product_id: null,
-      product_name: null,
-      product_type: null,
-      product_description: null,
-      sku: null,
-      unit: null,
-      mrp: null,
-      sale_price: null,
-      tax_rate: null,
+      product_name: "",
+      product_type: "",
+      sku: "",
+      unit: "",
+      // category_id: "",
+      sale_price: "",
+      status: "active",
+      product_description: "",
+     
 
       company_id: null,
       created_by: null,
       created_date: null,
       modified_by: null,
       modified_date: null,
-      status: "active",
+
     },
     sections: [
       {
         columns: 2,
         fields: [
-          { name: "product_name", label: "Product/Service Name", type: "text", required: true, placeholder: "Enter product name", gridSpan: 12 },
-        ],
-      },
-      {
-        columns: 2,
-        fields: [
+          { name: "product_name", label: "Product Name", type: "text", required: true, placeholder: "Enter product name", gridSpan: 6 },
           {
             name: "product_type",
-            label: "Product/Service Type",
+            label: "Product Type",
             type: "smartSelect",
             required: true,
             id: "product_type",
@@ -87,17 +89,42 @@ export const productsModuleSchema = {
               selectFields: "category_id,categoryName",
               searchField: "categoryName",
               slug: 'product-types',
-               status: 'active',
+              status: 'active',
               labelKey: "categoryName",
               valueKey: "category_id",
               placeholder: "Select Product Type",
               multi: false,
             },
           },
+        ],
+      },
+      {
+        columns: 2,
+        fields: [
+          // {
+          //   name: "category_id",
+          //   label: "Category",
+          //   type: "smartSelect",
+          //   // required: true,
+          //   id: "category-id",
+          //   gridSpan: 6,
+          //   config: {
+          //     apiUrl: "/system/searchSlugList",
+          //     tableName: "categories",
+          //     selectFields: "category_id,categoryName",
+          //     searchField: "categoryName",
+          //     slug: "product-category",
+          //     // status: "active",
+          //     labelKey: "categoryName",
+          //     valueKey: "category_id",
+          //     placeholder: "Select Category",
+          //     multi: false,
+          //   },
+          // },
           {
             name: "unit",
-            label: "Product Units",
-             type: "smartSelect",
+            label: "Unit",
+            type: "smartSelect",
             required: true,
             id: "product_unit",
             gridSpan: 6,
@@ -114,16 +141,24 @@ export const productsModuleSchema = {
               multi: false,
             },
           },
-        
+
         ],
       },
       {
         columns: 2,
         fields: [
-          { name: "sku", label: "SKU", type: "text", required: false, placeholder: "Enter SKU", gridSpan: 3 },
-          { name: "mrp", label: "mrp", type: "text", required: false, placeholder: "Enter mrp", gridSpan: 3 },
-          { name: "sale_price", label: "sale price", type: "text", required: false, placeholder: "Enter sale price", gridSpan: 3 },
-          { name: "tax_rate", label: "tax rate", type: "text", required: false, placeholder: "Enter tax rate", gridSpan: 3 },
+          { name: "sku", label: "SKU", type: "text", required: false, placeholder: "Enter SKU", gridSpan: 4 },
+          { name: "sale_price", label: "Sale Price", type: "number", required: false, placeholder: "Enter sale price", gridSpan: 4 },
+          {
+            name: "status", label: "Status", type: "select",
+            options: [
+              { label: "Active", value: "active" },
+              { label: "Inactive", value: "inactive" },
+            ],
+            placeholder: "Select status",
+            gridSpan: 4,
+          }
+
         ],
       },
       {
@@ -140,13 +175,12 @@ export const productsModuleSchema = {
     // product_type: z.string().min(1, "Product/Service type is required"),
     product_type: z.coerce.number().min(1, "Product/Service type is required"),
     unit: z.coerce.number().min(1, "Product unit is required"),
-
+    // category_id: z.coerce.number({ message: "Category is required", }),
     product_description: z.union([z.literal(null), z.string()]).optional(),
     sku: z.union([z.literal(""), z.string()]).optional(),
-    mrp: z.union([z.literal(""), z.coerce.number().min(0, "Number must be positive")]).optional(),
     sale_price: z.union([z.literal(""), z.coerce.number()]).optional(),
-    tax_rate: z.union([z.literal(""), z.coerce.number()]).optional(),
     company_id: z.any().optional(),
+     status: z.enum(["active", "inactive"]),
   }),
 };
 

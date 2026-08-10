@@ -51,6 +51,8 @@ export const useMenuForm = ({ isOpen, onClose, selectedMenu, onAfterSave }) => {
     const result = menuMasterSchema.validationSchema.safeParse(formData);
 
     if (!result.success) {
+      console.log(result.error.issues); 
+      console.log(JSON.stringify(result.error.issues, null, 2)); 
       const nextErrors = {};
 
       result.error.issues.forEach((item) => {
@@ -64,8 +66,11 @@ export const useMenuForm = ({ isOpen, onClose, selectedMenu, onAfterSave }) => {
     try {
       setLoading(true);
       setErrors({});
-
+       console.log("FORM DATA =", formData);
+console.log("parent_id =", formData.parent_id);
+console.log("typeof =", typeof formData.parent_id);
       const res = await saveMenu({ mode, menuId, payload: formData });
+
 
       if (res.success) {
         toast.success(res?.message || `Menu ${mode === "create" ? "created" : "updated"} successfully`);
