@@ -29,12 +29,12 @@ export const usersModuleSchema = {
     // Keep joined field metadata here so future modules can reuse the same pattern.
     // If you have dropdown APIs later, options can be filled dynamically from here.
     {
-      field: "roleID",
+      field: "reporting_to",
       fieldtype: "joined",
-      joinedTable: "user_role_master",
-      select: "roleID,roleName",
-      primaryKey: "roleID",
-      labelKey: "roleName",
+      joinedTable: "admin",
+      select: "adminID,name",
+      primaryKey: "adminID",
+      labelKey: "name",
       slug: "",
       options: [],
     },
@@ -49,7 +49,7 @@ export const usersModuleSchema = {
       options: [],
     },
   ],
-  defaultColumns: ["name", "userName", "email", "contactNo", "roleID", "status", "company_id"],
+  defaultColumns: ["name", "userName", "email", "contactNo", "roleID", "reporting_to_user_id", "status", "company_id"],
   skipFields: ["user_setting", "gfcmToken", "otp", "country_code", "otp_exp_time", "g_cal_token", "one_drive_access_token", "is_google_sync", "is_one_drive_sync", "ftoken", "isVerified", "photo", "adminID", "latitude", "longitude", "roleOfUser", "password"],
   tableCellConfig: [
     { column_name: "name", type: "person" },
@@ -67,6 +67,9 @@ export const usersModuleSchema = {
     { company_id: "Assigned Company" },
     { userName: "User Name" },
     { roleID: "User Role" },
+
+    { reporting_to: "Assigned Manager" },
+
     { is_approver: "Approval Privileges" },
     { otp: "OTP" },
   ],
@@ -85,6 +88,9 @@ export const usersModuleSchema = {
       password: null,
       is_sys_user: "no",
       roleID: null,
+
+      reporting_to_user_id: null,
+
       address: null,
       google_location: null,
       contactNo: null,
@@ -157,6 +163,24 @@ export const usersModuleSchema = {
               placeholder: "Select Company",
               multi: false
             }
+          },
+          {
+            name: "reporting_to",
+            label: "Assigned Manager",
+            type: "smartSelectInput",
+            required: false,
+            id: "reporting_to",
+            config: {
+              apiUrl: "/system/searchList",
+              type: "salesman",
+              source: "admin",
+              list: "adminID,name",
+              check: "name",
+              getValue: (item) => item.adminID,
+              getLabel: (item) => item.name || "Unnamed Sales Person",
+              placeholder: "Select Assigned Manager",
+              multi: false
+            },
           },
           {
             name: "is_approver",
