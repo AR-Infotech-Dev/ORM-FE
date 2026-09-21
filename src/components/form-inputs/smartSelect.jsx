@@ -22,11 +22,8 @@ function SmartSelect({ field, value, onSelect, onObjectSelect, config = {}, erro
 
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const fetchOptions = async () => {
     try {
-      console.log(apiUrl);
-      
       setLoading(true);
       const res = await makeRequest(apiUrl, {
         method: "POST",
@@ -45,10 +42,7 @@ function SmartSelect({ field, value, onSelect, onObjectSelect, config = {}, erro
       });
 
       // const rows = (!slug) ? res?.data || [] : res?.data ? [0].sublist || [] ;
-      const rows = !slug
-        ? res?.data || []
-        : res?.data?.[0]?.sublist || [];
-
+      const rows = !slug ? res?.data || [] : res?.data?.[0]?.sublist || [];
       const formatted = rows.map((item) => {
         const count = countKey ? Number(item[countKey] || 0) : null;
         const label = countKey
@@ -82,7 +76,6 @@ function SmartSelect({ field, value, onSelect, onObjectSelect, config = {}, erro
       onObjectSelect?.(matched.original || matched);
     }
   }, [value, options]);
-
   const handleChange = (event) => {
     onSelect?.(event);
     const matched = options.find((item) => String(item.value) === String(event.target.value));

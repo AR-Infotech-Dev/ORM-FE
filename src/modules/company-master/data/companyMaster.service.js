@@ -31,19 +31,29 @@ export const getCompanyDetails = async (companyId) => {
 };
 
 export const saveCompany = async ({ mode, companyId, payload }) => {
+   console.log("SAVE MODE =", mode);
+  console.log("COMPANY ID =", companyId);
   const saveUrl =
     mode === "create"
       ? companyMasterSchema.api.create
       : `${companyMasterSchema.api.edit}/${companyId}`;
+
   const method = mode === "create" ? "PUT" : "POST";
 
-  return await makeRequest(saveUrl, {
+  console.log("METHOD =", method);
+  console.log("URL =", saveUrl);
+  console.log("PAYLOAD =", payload);
+
+  const res = await makeRequest(saveUrl, {
     method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-};
 
+  console.log("SAVE RESPONSE =", res);
+
+  return res;
+};
 export const uploadCompanyLogo = async ({ companyId, file }) => {
   const uploadUrl = companyId
     ? `${companyMasterSchema.api.edit}/${companyId}/logo`
@@ -68,31 +78,31 @@ export const removeCompanyLogo = async (companyId) => {
   });
 };
 
-export const testCompanyMailConnection = async (payload) => {
-  return await makeRequest(companyMasterSchema.api.testMail, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-};
-export const testCompanyDBConnection = async (payload) => {
-  return await makeRequest(companyMasterSchema.api.testDB, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-};
-export const exportCompanyDb = async (companyId) => {
-  const res = await makeRequest(`/companies/${companyId}/export-db`, {
-    method: "GET",
-    responseType: "blob",
-    timeout: 120000,
-  });
+// export const testCompanyMailConnection = async (payload) => {
+//   return await makeRequest(companyMasterSchema.api.testMail, {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(payload),
+//   });
+// };
+// export const testCompanyDBConnection = async (payload) => {
+//   return await makeRequest(companyMasterSchema.api.testDB, {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(payload),
+//   });
+// };
+// export const exportCompanyDb = async (companyId) => {
+//   const res = await makeRequest(`/companies/${companyId}/export-db`, {
+//     method: "GET",
+//     responseType: "blob",
+//     timeout: 120000,
+//   });
 
-  const url = window.URL.createObjectURL(res.data);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `company-${companyId}-export.sql`;
-  a.click();
-  window.URL.revokeObjectURL(url);
-};
+//   const url = window.URL.createObjectURL(res.data);
+//   const a = document.createElement("a");
+//   a.href = url;
+//   a.download = `company-${companyId}-export.sql`;
+//   a.click();
+//   window.URL.revokeObjectURL(url);
+// };

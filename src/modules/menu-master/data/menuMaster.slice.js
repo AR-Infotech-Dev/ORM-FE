@@ -42,12 +42,12 @@ export const deleteMenuItems = createAsyncThunk(
 export const saveMenuSequence = createAsyncThunk(
   "menuMaster/saveMenuSequence",
   async (rows, { rejectWithValue }) => {
-    const positions = rows
-      .map((menu, index) => ({
-        menu_id: menu?.menu_id,
-        menu_index: index + 1,
-      }))
-      .filter((item) => item.menu_id);
+    const positions = rows.map((menu, index) => ({
+     menu_id: menu.menu_id,
+    menu_index: index + 1,
+    parent_id: menu.parent_id,
+}))
+  .filter((item) => item.menu_id);
 
     if (!positions.length) {
       return rejectWithValue("No menu sequence found to save.");

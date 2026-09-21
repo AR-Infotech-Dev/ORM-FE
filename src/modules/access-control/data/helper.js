@@ -1,5 +1,6 @@
 import { accessModules, accessPermissionColumns } from "./accessControlData";
 import { getSchemaFieldsForMenu } from "./moduleSchemaRegistry";
+import { ICONS } from "../../menu-master/data/module.schema";
 
 export const getUserId = (user = {}) => {
     return user?.adminID || user?.id || user?._id || user?.user_id;
@@ -53,6 +54,8 @@ export const normalizeMenuModule = (menu = {}, isChild = false, parent = null) =
     const menuId = getMenuId(menu);
     const name = getMenuName(menu);
     const moduleKey = slugify(menu?.module_name);
+    const iconName = menu?.icon_name || "Folder";
+const Icon = ICONS[iconName] || ICONS.Folder;
 
     return {
         id: String(menuId || moduleKey || name),
@@ -62,7 +65,8 @@ export const normalizeMenuModule = (menu = {}, isChild = false, parent = null) =
         module_name: menu?.module_name || menu?.moduleName || "",
         table_name: menu?.table_name || menu?.tableName || "",
         name: isChild && parent ? `${getMenuName(parent)} / ${name}` : name,
-        icon: accessModules.find((module) => module.id === moduleKey)?.icon || accessModules[0].icon,
+        icon: Icon,
+    icon_name: iconName,
         supports: { view: true, add: true, edit: true, delete: true },
         permissions: { view: false, add: false, edit: false, delete: false },
         fields: getSchemaFieldsForMenu(menu),

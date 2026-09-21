@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { getStoredPermissions } from "@auth/utils/authStorage";
 import { accessPermissionColumns } from "../data/accessControlData";
 import { flattenMenuModules } from "../data/helper";
+
 import {
   getAccessMenus,
   getIdentityPermissions,
@@ -109,11 +110,10 @@ export function useAccessControlModule({ currentUser = {} }) {
     };
   }, [selectedIdentity]);
 
-  const setModulePermission = (moduleId, permissionKey, nextValue) => {
-    setModules((current) =>
-      current.map((module) => {
-        if (module.id !== moduleId) return module;
-
+ const setModulePermission = (moduleId, permissionKey, nextValue) => {
+  setModules((current) =>
+    current.map((module) => {
+      if (module.id === moduleId) {
         const nextPermissions = {
           ...module.permissions,
           [permissionKey]: nextValue,
@@ -124,14 +124,30 @@ export function useAccessControlModule({ currentUser = {} }) {
           nextPermissions.edit = false;
           nextPermissions.delete = false;
         }
-
         return {
           ...module,
           permissions: nextPermissions,
         };
-      })
-    );
-  };
+      }
+
+      if ( module.parent_id && current.find((m) => m.menu_id === module.parent_id)?.id === moduleId ) {
+        if (permissionKey === "view" && !nextValue) {
+          return {
+            ...module,
+            permissions: {
+              view: false,
+              add: false,
+              edit: false,
+              delete: false,
+            },
+          };
+        }
+      }
+
+      return module;
+    })
+  );
+};
 
   const openAdvancedSettings = (moduleId) => {
     setAdvancedModuleId(moduleId);

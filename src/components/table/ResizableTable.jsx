@@ -271,7 +271,6 @@ function ResizableTable({
             {!loading &&
               rows.map((row, index) => {
                 const rowKey = getRowIdentifier(row) ?? row?.name ?? index;
-
                 return typeof renderRow === "function" ? (
                   <Fragment key={rowKey}>
                     {renderRow(row, index, resolvedColumns, rowRenderContext)}

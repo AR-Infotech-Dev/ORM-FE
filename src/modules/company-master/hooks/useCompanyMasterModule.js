@@ -14,7 +14,7 @@ import {
   setCompanyMasterSelection,
 } from "../data/companyMaster.slice";
 import { getCompanyIdentifier } from "../utils/companyMaster.utils";
-import { exportCompanyDb } from "../data/companyMaster.service";
+// import { exportCompanyDb } from "../data/companyMaster.service";
 
 export const useCompanyMasterModule = ({ filterState }) => {
   const dispatch = useAppDispatch();
@@ -94,24 +94,22 @@ export const useCompanyMasterModule = ({ filterState }) => {
 
     toast.error(action.payload || "Error while deleting company");
   };
-  const handleDBExport = async (row) => {
-    await exportCompanyDb(row.company_id);
-  };
+  // const handleDBExport = async (row) => {
+  //   await exportCompanyDb(row.company_id);
+  // };
 
-  return {
-    companyList,
-    pagination,
-    page,
-    loading,
-    deleting,
-    selectedRowIds,
-    handlePageChange,
-    getCompanies,
-    handleToggleRow,
-    handleToggleAllRows,
-    handleDeleteSelected,
-    handleDeleteRow,
-    handleDBExport
-  };
-
+ return {
+  companyList,
+  pagination,
+  page,
+  loading,
+  deleting,
+  selectedRowIds,
+  handlePageChange,
+  getCompanies,
+  handleToggleRow,
+  handleToggleAllRows,
+  handleDeleteSelected,
+  handleDeleteRow,
+};
 };

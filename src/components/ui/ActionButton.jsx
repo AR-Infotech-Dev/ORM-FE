@@ -15,7 +15,14 @@ function ActionButton({ children, variant = "ghost", className = "", ...props })
                 : "ghost-button";
 
   return (
-    <button className={`${variantClass}${className ? ` ${className}` : ""}`} {...props}>
+    <button
+      className={`${variantClass}${className ? ` ${className}` : ""}`}
+      onClick={(e) => {
+        console.log("BUTTON CLICK");
+        props.onClick?.(e);
+      }}
+      {...props}
+    >
       {children}
     </button>
   );

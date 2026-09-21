@@ -92,6 +92,11 @@ export const makeRequest = async (url, options = {}) => {
       responseType,
     };
     const res = await axios(config);
+    console.log("========== AXIOS RESPONSE ==========");
+console.log(res);
+console.log("STATUS =", res.status);
+console.log("DATA =", res.data);
+console.log("====================================");
     if (responseType === "blob") {
       return {
         success: true,

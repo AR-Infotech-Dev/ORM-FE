@@ -14,6 +14,7 @@ import {
 import { getMenuIdentifier } from "../utils/menuMaster.utils";
 
 export const useMenuMasterModule = ({ filterState }) => {
+  
   const dispatch = useAppDispatch();
 
   const menuList = useAppSelector(selectMenuMasterRows);
@@ -37,6 +38,7 @@ export const useMenuMasterModule = ({ filterState }) => {
       toast.error("Menu id not found.");
       return;
     }
+    
 
     const action = await dispatch(deleteMenuItems([menuId]));
 
@@ -49,10 +51,30 @@ export const useMenuMasterModule = ({ filterState }) => {
     toast.error(action.payload || "Error while deleting menus");
   };
 
-  const handleSortChange = (nextRows) => {
-    dispatch(setMenuMasterRows(nextRows));
-  };
+ const handleSortChange = ({ activeId, overId }) => {
+  console.log("Active =", activeId);
+  console.log("Over =", overId);
 
+  const parent = menuList.find(
+    (m) => m.menu_id === overId
+  );
+
+  console.log("Parent =", parent);
+
+  const updatedRows = menuList.map((menu) => {
+    if (menu.menu_id === activeId) {
+      return {
+        ...menu,
+        parent_id: overId,
+      };
+    }
+    return menu;
+  });
+
+  console.log(updatedRows);
+
+  dispatch(setMenuMasterRows(updatedRows));
+};
   const handleSaveSequence = async () => {
     const action = await dispatch(saveMenuSequence(menuList));
 

@@ -9,6 +9,8 @@ import visitsReducer from "@modules/visits/data/visits.slice";
 import dealerMasterReducer from "@modules/dealer/data/dealer.slice";
 import userroleReducer from "@modules/user-role/data/userrole.slice";
 import myTeamReducer from "@modules/myTeams/data/myTeams.slice";
+import orderBookingReducer from "@modules/orders/booking/data/booking.slice";
+import orderConfirmationReducer from "@modules/orders/confirmation/data/confirmation.slice";
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +24,9 @@ export const store = configureStore({
     dealers: dealerMasterReducer,
     userrole: userroleReducer,
     myTeam: myTeamReducer,
+
+    orderBooking: orderBookingReducer,
+    orderConfirmation: orderConfirmationReducer,
   },
 });
 
