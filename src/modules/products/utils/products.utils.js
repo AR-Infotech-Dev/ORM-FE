@@ -17,21 +17,23 @@ export function normalizeProductData(product = {}) {
     mrp: product?.mrp || null,
     sale_price: product?.sale_price || null,
     tax_rate: product?.tax_rate || null,
-
+    discount: product?.discount || null,
     company_id: product?.company_id || null,
   };
 }
 
 export function normalizeProductSavePayload(formData = {}) {
   const payload = {
-    product_name: formData.product_name,
-    product_type: formData.product_type,
-    // category_id: formData.category_id,
-    unit: formData.unit,
-    sku: formData.sku,
-    sale_price: Number(formData.sale_price),
-    status: formData.status,
-    product_description: formData.product_description,
+    product_name: formData.product_name ??"",
+    product_type: formData.product_type ??"",
+    product_description: formData.product_description ??"",
+    sku: formData.sku ??"",
+    category_id: formData.category_id ??"",
+    unit: formData.unit ??"",
+    mrp: formData.mrp ??"",
+    sale_price: formData.sale_price ??"",
+    tax_rate: formData.tax_rate ??"",
+    discount: formData.discount ?? "",
   };
 
   if (formData.product_id) payload.product_id = formData.product_id;

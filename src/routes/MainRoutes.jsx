@@ -21,9 +21,13 @@ const CompanyMasterModulePage = lazy(() => import("@modules/company-master/Compa
 
 const AccessControlModulePage = lazy(() => import("@modules/access-control/AccessControlModulePage"));
 const UserProfilePage = lazy(() => import("@modules/profile/UserProfilePage"));
-// const MasterModulePage = lazy(() => import("@modules/master/MasterModulePage"));
+const VisitPage = lazy(() => import("@modules/visits/VisitModulePage"));
+const DealerModulePage = lazy(() => import("@modules/dealer/DealerModulePage"));
+const UserRoleModulePage = lazy(() => import("@modules/user-role/UserRoleModulePage"));
+const MyTeamsModulePage = lazy(() => import("@modules/myTeams/MyTeamsModulePage"));
 
-
+const OrdersBookingPage = lazy(()=>import("@modules/orders/booking/OrdersBookingPage"));
+const OrdersConfirmationPage = lazy(()=>import("@modules/orders/confirmation/OrdersConfirmationPage"));
 
 const withPermission = (menuId, element) => (
   <PermissionRoute menuId={menuId}>{element}</PermissionRoute>
@@ -47,6 +51,9 @@ const menuRouteComponents = {
   "/access-control": AccessControlModulePage,
   "/profile": UserProfilePage,
 
+
+  "/orders/booking":OrdersBookingPage,
+  "/orders/confirmation":OrdersConfirmationPage,
 };
 
 function DefaultMenuRedirect() {

@@ -92,7 +92,7 @@ export function StatCard({ stat }) {
         </span>
 
         <span className="text-[11px] text-[#999]">
-          vs last month
+          vs last month 
         </span>
       </div>
     </article>

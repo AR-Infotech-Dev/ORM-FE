@@ -33,9 +33,8 @@ export const productsModuleSchema = {
     // { column_name: "category_id" },
     { column_name: "unit" },
     { column_name: "sale_price" },
-    { column_name: "status", type: "tag" },
-
-
+    { column_name: "tax_rate" },
+    { column_name: "discount" },
 
   ],
   defaultColumns: ["product_id", "product_name", "product_type", "sku", "category_id", "unit", "sale_price", "status",],
@@ -54,16 +53,16 @@ export const productsModuleSchema = {
   savedFilters: [],
   form: {
     initialValues: {
-      product_name: "",
-      product_type: "",
-      sku: "",
-      unit: "",
-      // category_id: "",
-      sale_price: "",
-      status: "active",
-      product_description: "",
-     
-
+      product_id: null,
+      product_name: null,
+      product_type: null,
+      product_description: null,
+      sku: null,
+      unit: null,
+      mrp: null,
+      sale_price: null,
+      tax_rate: null,
+      discount: null,
       company_id: null,
       created_by: null,
       created_date: null,
@@ -123,7 +122,7 @@ export const productsModuleSchema = {
           // },
           {
             name: "unit",
-            label: "Unit",
+            label: "Product Units",
             type: "smartSelect",
             required: true,
             id: "product_unit",
@@ -136,29 +135,21 @@ export const productsModuleSchema = {
               slug: 'product-units',
               status: 'active',
               labelKey: "categoryName",
-              valueKey: "category_id",
+              valueKey: "categoryName",
               placeholder: "Select Product Unit",
               multi: false,
             },
           },
-
         ],
       },
       {
         columns: 2,
         fields: [
-          { name: "sku", label: "SKU", type: "text", required: false, placeholder: "Enter SKU", gridSpan: 4 },
-          { name: "sale_price", label: "Sale Price", type: "number", required: false, placeholder: "Enter sale price", gridSpan: 4 },
-          {
-            name: "status", label: "Status", type: "select",
-            options: [
-              { label: "Active", value: "active" },
-              { label: "Inactive", value: "inactive" },
-            ],
-            placeholder: "Select status",
-            gridSpan: 4,
-          }
-
+          { name: "sku", label: "SKU", type: "text", required: false, placeholder: "Enter SKU", gridSpan: 3 },
+          { name: "mrp", label: "mrp", type: "text", required: false, placeholder: "Enter mrp", gridSpan: 3 },
+          { name: "sale_price", label: "sale price", type: "text", required: false, placeholder: "Enter sale price", gridSpan: 3 },
+          { name: "tax_rate", label: "tax rate", type: "text", required: false, placeholder: "Enter tax rate", gridSpan: 3 },
+          { name: "discount", label: "Discount", type: "text", required: false, placeholder: "Enter discount", gridSpan: 3 },
         ],
       },
       {
@@ -174,11 +165,12 @@ export const productsModuleSchema = {
     product_name: z.string().trim().min(1, "Product/Service name is required"),
     // product_type: z.string().min(1, "Product/Service type is required"),
     product_type: z.coerce.number().min(1, "Product/Service type is required"),
-    unit: z.coerce.number().min(1, "Product unit is required"),
-    // category_id: z.coerce.number({ message: "Category is required", }),
+    unit: z.string().trim().min(1, "Unit is required"),
     product_description: z.union([z.literal(null), z.string()]).optional(),
     sku: z.union([z.literal(""), z.string()]).optional(),
     sale_price: z.union([z.literal(""), z.coerce.number()]).optional(),
+    tax_rate: z.union([z.literal(""), z.coerce.number()]).optional(),
+    discount: z.union([z.literal(""), z.coerce.number().min(0, "Discount must be positive")]).optional(),
     company_id: z.any().optional(),
      status: z.enum(["active", "inactive"]),
   }),
